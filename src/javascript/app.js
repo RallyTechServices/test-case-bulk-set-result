@@ -40,6 +40,38 @@ Ext.define("TSTestCaseBulkResult", {
         };
     }, 
     
+    getGridConfig: function(options) {
+        return {
+            xtype: 'rallytreegrid',
+            alwaysShowDefaultColumns: false,
+            columnCfgs: this.getColumnCfgs(),
+            enableBulkEdit: true,
+            enableRanking: Rally.data.ModelTypes.areArtifacts(this.modelNames),
+            expandAllInColumnHeaderEnabled: true,
+            plugins: this.getGridPlugins(),
+            stateId: this.getScopedStateId('grid'),
+            stateful: true,
+            store: options && options.gridStore,
+            storeConfig: {
+                filters: this.getPermanentFilters()
+            },
+            summaryColumns: [],
+            listeners: {
+                afterrender: this.publishComponentReady,
+                storeload: {
+                    fn: function () {
+                        this.fireEvent('contentupdated', this);
+                    },
+                    single: true
+                },
+                scope: this
+            },
+            bulkEditConfig: {
+                items:  [{ xtype: 'tsbulkverdictmenuitem' }]
+            }
+        };
+    },
+    
     _loadWsapiRecords: function(config){
         var deferred = Ext.create('Deft.Deferred');
         var me = this;
@@ -62,7 +94,7 @@ Ext.define("TSTestCaseBulkResult", {
     },
     
     getPermanentFilters: function() {
-        console.log(this.getSettings());
+
         if ( Ext.isEmpty(this.getSetting('query') ) ) {
             return [];
         }

@@ -3,14 +3,14 @@
 <head>
     <title>TS Test Case Bulk Result</title>
     <script type="text/javascript">
-        var APP_BUILD_DATE = "Wed Apr 06 2016 15:39:40 GMT-0700 (PDT)";
+        var APP_BUILD_DATE = "Wed Apr 06 2016 19:35:04 GMT-0700 (PDT)";
     </script>
     
     <script type="text/javascript" src="https://us1.rallydev.com/apps/2.0/sdk-debug.js?apiKey=_PUT_APIKEY_HERE_"></script>
 
     <script type="text/javascript">
         Rally.onReady(function() {
-            Rally.loadScripts(["src/javascript/utils/__ts-info-link.js","src/javascript/utils/__ts-logger.js","src/javascript/app.js"],
+            Rally.loadScripts(["src/javascript/utils/__ts-info-link.js","src/javascript/utils/__ts-logger.js","src/javascript/utils/settings.js","src/javascript/utils/ts-bulk-verdict-menuitem.js","src/javascript/utils/ts-edit-verdict-dialog.js","src/javascript/app.js"],
 	            function() {
 	                Rally.launchApp('TSTestCaseBulkResult', {
 	                    name: 'TS Test Case Bulk Result'
