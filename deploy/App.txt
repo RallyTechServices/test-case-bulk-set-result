@@ -3,11 +3,11 @@
 <head>
     <title>TS Test Case Bulk Result</title>
     <!--  (c) 2015,2016 CA Technologies.  All Rights Reserved. -->
-    <!--  Build Date: Wed Apr 20 2016 13:28:06 GMT-0700 (MST) -->
+    <!--  Build Date: Wed Apr 20 2016 14:18:09 GMT-0700 (MST) -->
     
     <script type="text/javascript">
-        var APP_BUILD_DATE = "Wed Apr 20 2016 13:28:06 GMT-0700 (MST)";
-        var CHECKSUM = 8007187929;
+        var APP_BUILD_DATE = "Wed Apr 20 2016 14:18:09 GMT-0700 (MST)";
+        var CHECKSUM = 8504918420;
     </script>
     
     <script type="text/javascript" src="/apps/2.0/sdk.js"></script>
@@ -45,7 +45,11 @@ Ext.define('Rally.technicalservices.InfoLink',{
 
     autoShow: true,
    
-    width: 350, 
+    width: 350,
+    
+    informationalConfig: null,
+    
+    items: [{xtype:'container', itemId:'information' }],
     
     initComponent: function() {
         var id = Ext.id(this);
@@ -92,11 +96,27 @@ Ext.define('Rally.technicalservices.InfoLink',{
         return deferred.promise;
     },
     
+    _addToContainer: function(container){
+        var config = Ext.apply({
+            xtype:'container',
+            height: 200,
+            overflowY: true
+        }, this.informationalConfig);
+        
+        console.log('adding ', config, container);
+        container.add(config);
+    },
+    
     afterRender: function() {
         var app = Rally.getApp();
         
+        if ( !Ext.isEmpty( this.informationalConfig ) ) {
+            var container = this.down('#information');
+            this._addToContainer(container);
+            
+        }
+        
         if (! app.isExternal() ) {
-                
             this._checkChecksum(app).then({
                 scope: this,
                 success: function(result){
@@ -104,6 +124,7 @@ Ext.define('Rally.technicalservices.InfoLink',{
                         this.addDocked({
                             xtype:'container',
                             cls: 'build-info',
+                            dock: 'bottom',
                             padding: 2,
                             html:'<span class="icon-warning"> </span>Checksums do not match'
                         });
@@ -118,6 +139,7 @@ Ext.define('Rally.technicalservices.InfoLink',{
                 xtype:'container',
                 cls: 'build-info',
                 padding: 2,
+                dock: 'bottom',
                 html:'... Running externally'
             });
         }
@@ -133,7 +155,8 @@ Ext.define('Rally.technicalservices.InfoLink',{
                 xtype: 'component',
                 componentCls: 'intro-panel',
                 padding: 2,
-                html: this.informationHtml
+                html: this.informationHtml,
+                doc: 'top'
             });
         }
         
@@ -141,7 +164,8 @@ Ext.define('Rally.technicalservices.InfoLink',{
             xtype:'container',
             cls: 'build-info',
             padding: 2,
-            html:"This app was created by the Rally Technical Services Team."
+            dock:'bottom',
+            html:"This app was created by the CA AC Technical Services Team."
         });
         
         if ( APP_BUILD_DATE ) {
@@ -149,6 +173,7 @@ Ext.define('Rally.technicalservices.InfoLink',{
                 xtype:'container',
                 cls: 'build-info',
                 padding: 2,
+                dock: 'bottom',
                 html:'Build date/time: ' + APP_BUILD_DATE
             });
         }
@@ -189,7 +214,7 @@ var getHiddenFieldConfig = function (name) {
     };
 };
 
-Ext.define('Rally.apps.customlist.Settings', {
+Ext.define('TSSettings', {
     singleton: true,
     requires: [
         'Rally.ui.combobox.FieldComboBox',
@@ -201,49 +226,35 @@ Ext.define('Rally.apps.customlist.Settings', {
         this.app = app;
         return [
 //            {
-//                name: 'type',
-//                xtype: 'rallycombobox',
-//                allowBlank: false,
-//                autoSelect: false,
-//                shouldRespondToScopeChange: true,
-//                context: this.app.getContext(),
-//                initialValue: 'HierarchicalRequirement',
-//                storeConfig: {
-//                    model: Ext.identityFn('TypeDefinition'),
-//                    sorters: [{ property: 'DisplayName' }],
-//                    fetch: ['DisplayName', 'ElementName', 'TypePath', 'Parent', 'UserListable'],
-//                    filters: [{ property: 'UserListable', value: true }],
-//                    autoLoad: false,
-//                    remoteSort: false,
-//                    remoteFilter: true
-//                },
-//                displayField: 'DisplayName',
-//                valueField: 'TypePath',
-//                listeners: {
-//                    select: function (combo) {
-//                        this.app.clearFiltersAndSharedViews();
-//                        combo.fireEvent('typeselected', combo.getRecord().get('TypePath'), combo.context);
-//                    },
-//                    scope: this
-//                },
-//                bubbleEvents: ['typeselected'],
-//                readyEvent: 'ready',
-//                handlesEvents: {
-//                    projectscopechanged: function (context) {
-//                        this.refreshWithNewContext(context);
-//                    }
-//                }
+//                name: 'showControls',
+//                xtype: 'rallycheckboxfield',
+//                fieldLabel: 'Show Control Bar',
+//                labelWidth: 105
 //            },
-            { type: 'query' },
             {
-                name: 'showControls',
-                xtype: 'rallycheckboxfield',
-                fieldLabel: 'Show Control Bar'
+                xtype:'label',
+                text:'Configurable Information Text',
+                forId: 'explanationText'
             },
+            {
+                name: 'explanationText',
+                xtype: 'rallyrichtexteditor',
+                allowImageUpload: false,
+                height: 150
+            },
+//            { type: 'query' },
+            
             getHiddenFieldConfig('columnNames'),
             getHiddenFieldConfig('order')
         ];
-    }
+    },
+    
+    defaultExplanation: "The TestCase Bulk Result app is provided as a method for setting the same result on more than one" +
+        " test case at a time.  A user can select criteria to filter test sets by (e.g., Iteration).  Test sets and " +
+        " their test cases are displayed in tree format.  Tick the boxes next to test cases you wish to assign a " +
+        " verdict and then choose the gear icon.  The menu displayed will now include an option to 'Add Verdict'.  " +
+        " Choosing this menu option will launch a dialog that provides an entry point for the required fields of a test case " +
+        " so that a verdict can be assigned to the selected test cases."
 });
 Ext.define('CA.techservices.bulk.BulkVerdictMenuItem',{
     extend: 'Rally.ui.menu.item.RecordMenuItem',
@@ -579,7 +590,8 @@ Ext.define("TSTestCaseBulkResult", {
         defaultSettings: {
             showControls: true,
             type: 'TestCase',
-            columnNames: ['FormattedID','Name']
+            columnNames: ['FormattedID','Name'],
+            explanationText: TSSettings.defaultExplanation
         }
     },
 
@@ -677,7 +689,7 @@ Ext.define("TSTestCaseBulkResult", {
     },
     
     getSettingsFields: function() {
-        return Rally.apps.customlist.Settings.getFields(this);
+        return TSSettings.getFields(this);
     },
 
     getOptions: function() {
@@ -692,7 +704,12 @@ Ext.define("TSTestCaseBulkResult", {
     
     _launchInfo: function() {
         if ( this.about_dialog ) { this.about_dialog.destroy(); }
-        this.about_dialog = Ext.create('Rally.technicalservices.InfoLink',{});
+        this.about_dialog = Ext.create('Rally.technicalservices.InfoLink',{
+            title: 'Information',
+            informationalConfig: {
+                html: this.getSetting('explanationText')
+            }
+        });
     },
     
     isExternal: function(){

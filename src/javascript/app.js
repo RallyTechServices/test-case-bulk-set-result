@@ -15,7 +15,8 @@ Ext.define("TSTestCaseBulkResult", {
         defaultSettings: {
             showControls: true,
             type: 'TestCase',
-            columnNames: ['FormattedID','Name']
+            columnNames: ['FormattedID','Name'],
+            explanationText: TSSettings.defaultExplanation
         }
     },
 
@@ -113,7 +114,7 @@ Ext.define("TSTestCaseBulkResult", {
     },
     
     getSettingsFields: function() {
-        return Rally.apps.customlist.Settings.getFields(this);
+        return TSSettings.getFields(this);
     },
 
     getOptions: function() {
@@ -128,7 +129,12 @@ Ext.define("TSTestCaseBulkResult", {
     
     _launchInfo: function() {
         if ( this.about_dialog ) { this.about_dialog.destroy(); }
-        this.about_dialog = Ext.create('Rally.technicalservices.InfoLink',{});
+        this.about_dialog = Ext.create('Rally.technicalservices.InfoLink',{
+            title: 'Information',
+            informationalConfig: {
+                html: this.getSetting('explanationText')
+            }
+        });
     },
     
     isExternal: function(){

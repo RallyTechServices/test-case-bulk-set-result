@@ -11,7 +11,7 @@ var getHiddenFieldConfig = function (name) {
     };
 };
 
-Ext.define('Rally.apps.customlist.Settings', {
+Ext.define('TSSettings', {
     singleton: true,
     requires: [
         'Rally.ui.combobox.FieldComboBox',
@@ -23,47 +23,33 @@ Ext.define('Rally.apps.customlist.Settings', {
         this.app = app;
         return [
 //            {
-//                name: 'type',
-//                xtype: 'rallycombobox',
-//                allowBlank: false,
-//                autoSelect: false,
-//                shouldRespondToScopeChange: true,
-//                context: this.app.getContext(),
-//                initialValue: 'HierarchicalRequirement',
-//                storeConfig: {
-//                    model: Ext.identityFn('TypeDefinition'),
-//                    sorters: [{ property: 'DisplayName' }],
-//                    fetch: ['DisplayName', 'ElementName', 'TypePath', 'Parent', 'UserListable'],
-//                    filters: [{ property: 'UserListable', value: true }],
-//                    autoLoad: false,
-//                    remoteSort: false,
-//                    remoteFilter: true
-//                },
-//                displayField: 'DisplayName',
-//                valueField: 'TypePath',
-//                listeners: {
-//                    select: function (combo) {
-//                        this.app.clearFiltersAndSharedViews();
-//                        combo.fireEvent('typeselected', combo.getRecord().get('TypePath'), combo.context);
-//                    },
-//                    scope: this
-//                },
-//                bubbleEvents: ['typeselected'],
-//                readyEvent: 'ready',
-//                handlesEvents: {
-//                    projectscopechanged: function (context) {
-//                        this.refreshWithNewContext(context);
-//                    }
-//                }
+//                name: 'showControls',
+//                xtype: 'rallycheckboxfield',
+//                fieldLabel: 'Show Control Bar',
+//                labelWidth: 105
 //            },
-            { type: 'query' },
             {
-                name: 'showControls',
-                xtype: 'rallycheckboxfield',
-                fieldLabel: 'Show Control Bar'
+                xtype:'label',
+                text:'Configurable Information Text',
+                forId: 'explanationText'
             },
+            {
+                name: 'explanationText',
+                xtype: 'rallyrichtexteditor',
+                allowImageUpload: false,
+                height: 150
+            },
+//            { type: 'query' },
+            
             getHiddenFieldConfig('columnNames'),
             getHiddenFieldConfig('order')
         ];
-    }
+    },
+    
+    defaultExplanation: "The TestCase Bulk Result app is provided as a method for setting the same result on more than one" +
+        " test case at a time.  A user can select criteria to filter test sets by (e.g., Iteration).  Test sets and " +
+        " their test cases are displayed in tree format.  Tick the boxes next to test cases you wish to assign a " +
+        " verdict and then choose the gear icon.  The menu displayed will now include an option to 'Add Verdict'.  " +
+        " Choosing this menu option will launch a dialog that provides an entry point for the required fields of a test case " +
+        " so that a verdict can be assigned to the selected test cases."
 });

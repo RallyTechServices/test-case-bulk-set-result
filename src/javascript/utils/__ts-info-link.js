@@ -28,7 +28,11 @@ Ext.define('Rally.technicalservices.InfoLink',{
 
     autoShow: true,
    
-    width: 350, 
+    width: 350,
+    
+    informationalConfig: null,
+    
+    items: [{xtype:'container', itemId:'information' }],
     
     initComponent: function() {
         var id = Ext.id(this);
@@ -75,11 +79,27 @@ Ext.define('Rally.technicalservices.InfoLink',{
         return deferred.promise;
     },
     
+    _addToContainer: function(container){
+        var config = Ext.apply({
+            xtype:'container',
+            height: 200,
+            overflowY: true
+        }, this.informationalConfig);
+        
+        console.log('adding ', config, container);
+        container.add(config);
+    },
+    
     afterRender: function() {
         var app = Rally.getApp();
         
+        if ( !Ext.isEmpty( this.informationalConfig ) ) {
+            var container = this.down('#information');
+            this._addToContainer(container);
+            
+        }
+        
         if (! app.isExternal() ) {
-                
             this._checkChecksum(app).then({
                 scope: this,
                 success: function(result){
@@ -87,6 +107,7 @@ Ext.define('Rally.technicalservices.InfoLink',{
                         this.addDocked({
                             xtype:'container',
                             cls: 'build-info',
+                            dock: 'bottom',
                             padding: 2,
                             html:'<span class="icon-warning"> </span>Checksums do not match'
                         });
@@ -101,6 +122,7 @@ Ext.define('Rally.technicalservices.InfoLink',{
                 xtype:'container',
                 cls: 'build-info',
                 padding: 2,
+                dock: 'bottom',
                 html:'... Running externally'
             });
         }
@@ -116,7 +138,8 @@ Ext.define('Rally.technicalservices.InfoLink',{
                 xtype: 'component',
                 componentCls: 'intro-panel',
                 padding: 2,
-                html: this.informationHtml
+                html: this.informationHtml,
+                doc: 'top'
             });
         }
         
@@ -124,7 +147,8 @@ Ext.define('Rally.technicalservices.InfoLink',{
             xtype:'container',
             cls: 'build-info',
             padding: 2,
-            html:"This app was created by the Rally Technical Services Team."
+            dock:'bottom',
+            html:"This app was created by the CA AC Technical Services Team."
         });
         
         if ( APP_BUILD_DATE ) {
@@ -132,6 +156,7 @@ Ext.define('Rally.technicalservices.InfoLink',{
                 xtype:'container',
                 cls: 'build-info',
                 padding: 2,
+                dock: 'bottom',
                 html:'Build date/time: ' + APP_BUILD_DATE
             });
         }
