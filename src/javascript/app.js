@@ -3,7 +3,7 @@ Ext.define("TSTestCaseBulkResult", {
     componentCls: 'app',
     logger: new Rally.technicalservices.Logger(),
     defaults: { margin: 10 },
-    modelNames: ['TestCase'],
+    modelNames: ['TestSet'],
     statePrefix: 'ts-tcbr-customlist',
 
     disallowedAddNewTypes: ['user', 'userprofile', 'useriterationcapacity', 'testcaseresult', 'task', 'scmrepository', 'project', 'changeset', 'change', 'builddefinition', 'build', 'program'],
@@ -61,6 +61,19 @@ Ext.define("TSTestCaseBulkResult", {
                         this.fireEvent('contentupdated', this);
                     },
                     single: true
+                },
+                select: function(selModel, record) {
+                    record.cascadeBy(function(child){
+                        selModel.select(child, true, true);
+                    });
+                },
+                deselect: function(selModel, record) {
+                    record.cascadeBy(function(child) {
+                        selModel.deselect(child, true);
+                    });
+
+                    // if parent node is selected, deselect it, too
+                    selModel.deselect(record.parentNode,true);
                 },
                 scope: this
             },

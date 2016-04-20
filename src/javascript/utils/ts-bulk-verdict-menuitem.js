@@ -104,7 +104,17 @@ Ext.define('CA.techservices.bulk.BulkVerdictMenuItem',{
     _setResult: function(values, testcase) {
         var deferred = Ext.create('Deft.Deferred');
         var tcr_model = this.tcr_model;
+        
+        if ( testcase.get('_type') == 'testset' ) {
+            return;
+        }
+        
         values.TestCase = testcase.get('_ref');
+        
+        if ( testcase.parentNode && testcase.parentNode.get('_type') == 'testset' ) {
+            values.TestSet = testcase.parentNode.get('_ref');
+        }
+
         var tcr = Ext.create(tcr_model, values);
         tcr.save({
             callback: function(result, operation, success) {
