@@ -3,14 +3,14 @@
 <head>
     <title>TS Test Case Bulk Result</title>
     <!--  (c) 2015,2016 CA Technologies.  All Rights Reserved. -->
-    <!--  Build Date: Wed Apr 20 2016 14:18:09 GMT-0700 (MST) -->
+    <!--  Build Date: Sun Apr 24 2016 20:51:39 GMT-0700 (MST) -->
     
     <script type="text/javascript">
-        var APP_BUILD_DATE = "Wed Apr 20 2016 14:18:09 GMT-0700 (MST)";
-        var CHECKSUM = 8504918420;
+        var APP_BUILD_DATE = "Sun Apr 24 2016 20:51:39 GMT-0700 (MST)";
+        var CHECKSUM = 8504928296;
     </script>
     
-    <script type="text/javascript" src="/apps/2.0/sdk.js"></script>
+    <script type="text/javascript" src="/apps/2.1/sdk.js"></script>
 
     <script type="text/javascript">
         Rally.onReady(function() {
@@ -610,7 +610,7 @@ Ext.define("TSTestCaseBulkResult", {
 
     getFilterControlConfig: function() {
         return {
-           blackListFields: ['Project','LastResult','ObjectUUID','WorkProduct']
+           blackListFields: ['Project','ObjectUUID','LastResult','WorkProduct']
         };
     }, 
     

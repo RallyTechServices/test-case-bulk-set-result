@@ -35,7 +35,7 @@ Ext.define("TSTestCaseBulkResult", {
 
     getFilterControlConfig: function() {
         return {
-           blackListFields: ['Project','LastResult','ObjectUUID','WorkProduct']
+           blackListFields: ['Project','ObjectUUID','LastResult','WorkProduct']
         };
     }, 
     
